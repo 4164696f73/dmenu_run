@@ -22,13 +22,6 @@ type config struct{ terminal string }
 // Global variable so we can access it wherever.
 var c config
 
-const (
-	DIRS  = "dirs"
-	LOCAL = ".local"
-	XDG   = "XDG"
-	BIN   = "bin"
-)
-
 func (c *config) getTerm() {
 	f, err := os.ReadFile(os.Getenv("HOME") + "/.config/dmenu/config")
 	if err != nil {
