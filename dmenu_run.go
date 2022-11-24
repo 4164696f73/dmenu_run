@@ -252,6 +252,10 @@ func (d dmenu) run() {
 	}
 
 	shell := os.Getenv("SHELL")
+	if shell == "" {
+		shell = "sh"
+	}
+
 	os.WriteFile("/tmp/dmenu_tmp", []byte(d.strPipe), 0666)
 	cmd, _ := exec.Command(shell, "-c", "cat /tmp/dmenu_tmp | dmenu \"$@\"").CombinedOutput()
 	s := string(cmd)
