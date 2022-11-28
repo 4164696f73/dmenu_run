@@ -111,17 +111,15 @@ func (d *dmenu) searchDir(path string, dir []os.DirEntry) {
 			}
 		}
 	}
-	for {
+
+	for d.dir != nil {
 		var arr string
 		if len(d.dir) > 1 {
 			arr = d.dir[0]
 			d.dir = d.dir[1:len(d.dir)]
-			fmt.Println(d.dir, arr)
-		} else if len(d.dir) == 1 {
+		} else {
 			arr = d.dir[0]
 			d.dir = nil
-		} else {
-			break
 		}
 
 		file, err := os.ReadDir(arr)
