@@ -131,11 +131,12 @@ func (d *dmenu) searchDir(path string, dir []os.DirEntry) {
 }
 
 func (d *dmenu) replaceHomeVars(s string) string {
+	home := os.Getenv("HOME")
 	if strings.HasPrefix(s, "~") {
-		s = strings.Replace(s, "~", os.Getenv("HOME"), 1)
+		s = strings.Replace(s, "~", home, 1)
 	}
 	if strings.HasPrefix(s, "$HOME") {
-		s = strings.Replace(s, "$HOME", os.Getenv("HOME"), 1)
+		s = strings.Replace(s, "$HOME", home, 1)
 	}
 	return s
 }
@@ -161,7 +162,6 @@ func (d *dmenu) readAliases() {
 			if c[len(c)-1:] == ">" {
 				c = c[:len(c)-1]
 			}
-			d.replaceHomeVars(c)
 			d.alias = append(d.alias, s[0])
 			d.command = append(d.command, c)
 		}
@@ -179,7 +179,7 @@ func (d *dmenu) formDirsSlice() {
 	if err == nil {
 		s := strings.SplitN(string(f), "\n", -1)
 		for i := range s {
-			d.replaceHomeVars(s[i])
+			s[i] = d.replaceHomeVars(s[i])
 			exeList = append(exeList, s[i])
 		}
 	}
@@ -258,6 +258,8 @@ func (d dmenu) run() {
 	}
 
 	stdout := s[:len(s)-1] //strings.SplitN(s, "\n", -1)[0]
+
+	stdout = d.replaceHomeVars(stdout)
 
 	for i := range d.alias {
 		if strings.Contains(stdout, d.alias[i]) {
